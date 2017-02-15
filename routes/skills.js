@@ -25,9 +25,9 @@ router.post('/add', function(req, res, next) {
     where:{
       name: req.body.name.toLowerCase()
     }
-  }).spread(function(user, created) {
+  }).spread(function(skill, created) {
     if(created){
-      res.send(user.get({plain:true}))
+      res.send(skill.get({plain:true}))
     }else{
       res.send("Skill Sudah Ada")
     }
@@ -46,9 +46,15 @@ router.put('/update', function(req, res, next) {
 
 router.delete('/delete', function(req, res, next) {
   models.Skill.findById(req.body.id).then(function(result) {
-    return result.destroy()
-  }).then(function() {
-    res.send(`Data Dengan ID: ${req.body.id} Terhapus`)
+    if(result){
+        return result.destroy()
+    }
+  }).then(function(result) {
+    if(result){
+      res.send(`Data Dengan ID: ${req.body.id} Terhapus`)
+    }else{
+      res.send("Skil Tidak Ada")
+    }
   })
 })
 
