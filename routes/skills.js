@@ -3,14 +3,14 @@ var router = express.Router();
 const models = require('../models');
 
 
-router.get('/getAll', function(req, res, next) {
-    models.User.findAll().then(function(result) {
-        res.send(result)
-    })
+router.get('/getAll', function (req, res, next) {
+  models.Skill.findAll().then(function(result) {
+    res.send(result)
+  })
 })
 
 router.post('/getById', function(req, res, next) {
-    models.User.findAll({
+    models.Skill.findAll({
       where: {
         id: req.body.id
       }
@@ -19,21 +19,25 @@ router.post('/getById', function(req, res, next) {
     })
 })
 
+
 router.post('/add', function(req, res, next) {
-  models.User.create({
-    name: req.body.name,
-    email: req.body.email
-  }).then(function(err, result) {
-      if(err) res.send(err)
-      else res.send(result)
+  models.Skill.findOrCreate({
+    where:{
+      name: req.body.name.toLowerCase()
+    }
+  }).spread(function(user, created) {
+    if(created){
+      res.send(user.get({plain:true}))
+    }else{
+      res.send("Skill Sudah Ada")
+    }
   })
 })
 
 router.put('/update', function(req, res, next) {
-  models.User.findById(req.body.id).then(function(result) {
+  models.Skill.findById(req.body.id).then(function(result) {
     result.update({
-      name: req.body.name,
-      email: req.body.email
+      name: req.body.name
     }).then(function() {
         res.send(result)
     })
@@ -41,12 +45,13 @@ router.put('/update', function(req, res, next) {
 })
 
 router.delete('/delete', function(req, res, next) {
-  models.User.findById(req.body.id).then(function(result) {
+  models.Skill.findById(req.body.id).then(function(result) {
     return result.destroy()
   }).then(function() {
     res.send(`Data Dengan ID: ${req.body.id} Terhapus`)
   })
 })
+
 
 
 module.exports = router;
