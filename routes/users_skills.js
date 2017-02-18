@@ -23,8 +23,8 @@ router.post('/getById', function(req, res, next) {
 router.post('/add', function(req, res, next) {
     models.Users_skill.findOrCreate({
         where: {
-            userID: req.body.userID,
-            skillID: req.body.skillID
+            UserId: req.body.userID,
+            SkillId: req.body.skillID
         },
         defaults: {
             nilai: req.body.nilai
@@ -44,8 +44,8 @@ router.put('/update', function(req, res, next) {
   models.Users_skill.findById(req.body.id).then(function(result) {
     if(result){
       result.update({
-        userID: req.body.userID,
-        skillID: req.body.skillID,
+        UserId: req.body.userID,
+        SkillId: req.body.skillID,
         nilai: req.body.nilai
       }).then(function() {
           res.send(result)
@@ -69,6 +69,19 @@ router.delete('/delete', function(req, res, next) {
             res.send("ID Tidak ditemukan")
         }
     })
+})
+
+router.get('/getUsersSkills', function(req, res, next) {
+    models.User.findAll({include: models.Skill}).then(function(result) {
+      // var tampung = []
+      //   result.forEach(function(data) {
+      //       if(data.Skills.length != 0){
+      //         tampung.push(data)
+      //       }
+      //   })
+        res.send(result)
+    })
+
 })
 
 
